@@ -1,4 +1,4 @@
-(function(){
+(function() {
 
   var formElements = document.forms['upload-resize'];
   var offsetLeft = formElements['resize-x'];
@@ -23,20 +23,29 @@
   };
 
   sizeValue.onchange = function(evt) {
+
     if(imageHeight < imageWidth) {
       sizeValue.max = imageHeight;
     }
     else {
       sizeValue.max = imageWidth;
-    };
+    }
 
-    if(offsetLeft.value > imageWidth - sizeValue.value) {
-      offsetLeft.value = imageWidth - sizeValue.value
-    };
+    if(offsetLeft.value >= imageWidth - sizeValue.value) {
+      offsetLeft.value = imageWidth - sizeValue.value;
+    }
 
-    if(offsetTop.value > imageHeight - sizeValue.value) {
-      offsetTop.value = imageHeight - sizeValue.value
-    };
+    if(offsetLeft.value < 0) {
+      offsetLeft.value = 0;
+    }
+
+    if(offsetTop.value >= imageHeight - sizeValue.value) {
+      offsetTop.value = imageHeight - sizeValue.value;
+    }
+
+    if(offsetTop.value < 0) {
+      offsetTop.value = 0;
+    }
   };
 
   offsetLeft.onchange = function(evt) {
