@@ -22,19 +22,29 @@
     imageWidth = previewImage.width;
   };
 
+  sizeValue.onchange = function(evt) {
+    if(imageHeight < imageWidth) {
+      sizeValue.max = imageHeight;
+    }
+    else {
+      sizeValue.max = imageWidth;
+    };
+
+    if(offsetLeft.value > imageWidth - sizeValue.value) {
+      offsetLeft.value = imageWidth - sizeValue.value
+    };
+
+    if(offsetTop.value > imageHeight - sizeValue.value) {
+      offsetTop.value = imageHeight - sizeValue.value
+    };
+  };
+
   offsetLeft.onchange = function(evt) {
-    offsetLeft.max = imageWidth;
+    offsetLeft.max = imageWidth - sizeValue.value;
   };
 
   offsetTop.onchange = function(evt) {
-    offsetTop.max = imageHeight;
-  };
-
-  sizeValue.onchange = function(evt) {
-    if(imageHeight<imageWidth) {
-      sizeValue.max = imageHeight;
-    }
-    else sizeValue.max = imageWidth;
+    offsetTop.max = imageHeight - sizeValue.value;
   };
 
 })();
