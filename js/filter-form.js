@@ -7,7 +7,25 @@
   var prevButton = filterForm['filter-prev'];
   var selectedFilter = filterForm['upload-filter'];
 
+  var filterNone = filterForm['upload-filter-none'];
+  var filterChrome = filterForm['upload-filter-chrome'];
+  var filterSepia = filterForm['upload-filter-sepia'];
+
   var filterMap;
+
+  var restoreFiltersValue = function() {
+    if(docCookies.hasItem(filterNone.value)) {
+      filterNone.checked = true;
+    }
+    if(docCookies.hasItem(filterChrome.value)) {
+      filterChrome.checked = true;
+    }
+    if(docCookies.hasItem(filterSepia.value)) {
+      filterSepia.checked = true;
+    }
+  };
+
+  restoreFiltersValue();
 
   function setFilter() {
     if (!filterMap) {
@@ -35,12 +53,32 @@
     resizeForm.classList.remove('invisible');
   };
 
-  filterForm.onsubmit = function() {
+  filterForm.onsubmit = function(evt) {
     evt.preventDefault();
 
     uploadForm.classList.remove('invisible');
     filterForm.classList.add('invisible');
-  }
+
+    if(filterSepia.checked) {
+      docCookies.setItem(filterSepia.value);
+    }
+    else if(filterChrome.checked) {
+      docCookies.setItem(filterChrome.value);
+    }
+    else {
+      docCookies.setItem(filterNone.value);
+    }
+    console.log('chrome-' + filterChrome.value);
+    console.log('sepia-' + filterSepia.value);
+    console.log('none-' + filterNone.value);
+
+    filterForm.submit();
+
+  };
 
   setFilter();
 })();
+
+
+
+
