@@ -68,9 +68,6 @@
     else {
       docCookies.setItem(filterNone.value);
     }
-    console.log('chrome-' + filterChrome.value);
-    console.log('sepia-' + filterSepia.value);
-    console.log('none-' + filterNone.value);
 
     filterForm.submit();
 
