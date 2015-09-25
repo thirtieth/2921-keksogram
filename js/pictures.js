@@ -14,28 +14,32 @@ pictures.forEach(function(photo, i) {
 
   var newPhotoElement = photosTemplate.content.children[0].cloneNode(true);
 
-  newPhotoElement.querySelector('.picture img').src = photo['url'];
+  //newPhotoElement.querySelector('.picture img').src = photo['url'];
   newPhotoElement.querySelector('.picture-likes').textContent = photo['likes'];
   newPhotoElement.querySelector('.picture-comments').textContent = photo['comments'];
 
   photosFragment.appendChild(newPhotoElement);
 
   if (photo['url']) {
-      var photoBackground = new Image();
-      photoBackground.src = photo['url'];
+      var photoImage = new Image();
+      photoImage.src = photo['url'];
 
       var imageLoadTimeout = setTimeout(function() {
         newPhotoElement.classList.add('picture-load-failure');
       }, IMAGE_FAILURE_TIMEOUT);
 
-      photoBackground.onload = function() {
-        //newPhotoElement.replaceChild();
-        newPhotoElement.style.backgroundImage = 'url(\'' + photoBackground.src + '\')';
-        newPhotoElement.style.backgroundSize = '182px 182px';
-        clearTimeout(imageLoadTimeout);
-      }
+      photoImage.onload = function() {
+        photoImage.style.width = '182px';
+        photoImage.style.height = '182px';
 
-      photoBackground.onerror = function(evt) {
+        var oldPhoto = newPhotoElement.querySelector('.picture img');
+
+        newPhotoElement.replaceChild(photoImage, oldPhoto);
+
+        clearTimeout(imageLoadTimeout);
+      };
+
+      photoImage.onerror = function(evt) {
         newPhotoElement.classList.add('picture-load-failure');
       };
     }
