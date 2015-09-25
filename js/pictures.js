@@ -1,25 +1,25 @@
 (function () {
 
-var filters = document.querySelector('.filters');
+  var filters = document.querySelector('.filters');
 
-var photosContainer = document.querySelector('.pictures');
-var photosTemplate = document.getElementById('picture-template');
-var photosFragment = document.createDocumentFragment();
+  var photosContainer = document.querySelector('.pictures');
+  var photosTemplate = document.getElementById('picture-template');
+  var photosFragment = document.createDocumentFragment();
 
-var IMAGE_FAILURE_TIMEOUT = 10000;
+  var IMAGE_FAILURE_TIMEOUT = 10000;
 
-filters.classList.add('hidden');
+  filters.classList.add('hidden');
 
-pictures.forEach(function(photo, i) {
+  pictures.forEach(function(photo, i) {
 
-  var newPhotoElement = photosTemplate.content.children[0].cloneNode(true);
+    var newPhotoElement = photosTemplate.content.children[0].cloneNode(true);
 
-  newPhotoElement.querySelector('.picture-likes').textContent = photo['likes'];
-  newPhotoElement.querySelector('.picture-comments').textContent = photo['comments'];
+    newPhotoElement.querySelector('.picture-likes').textContent = photo['likes'];
+    newPhotoElement.querySelector('.picture-comments').textContent = photo['comments'];
 
-  photosFragment.appendChild(newPhotoElement);
+    photosFragment.appendChild(newPhotoElement);
 
-  if (photo['url']) {
+    if (photo['url']) {
       var photoImage = new Image();
       photoImage.src = photo['url'];
 
@@ -40,13 +40,14 @@ pictures.forEach(function(photo, i) {
 
       photoImage.onerror = function(evt) {
         newPhotoElement.classList.add('picture-load-failure');
+        clearTimeout(imageLoadTimeout);
       };
     }
 
-});
+  });
 
-photosContainer.appendChild(photosFragment);
+  photosContainer.appendChild(photosFragment);
 
-filters.classList.remove('hidden');
+  filters.classList.remove('hidden');
 
 })();
