@@ -23,7 +23,7 @@
     var photosTemplate = document.getElementById('picture-template');
     var photosFragment = document.createDocumentFragment();
 
-    pictures.forEach(function(photo) {
+    photos.forEach(function(photo) {
 
       var newPhotoElement = photosTemplate.content.children[0].cloneNode(true);
 
