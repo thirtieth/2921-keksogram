@@ -20,6 +20,9 @@
 
   function renderPhotos(photos) {
 
+    photosContainer.classList.remove('pictures-failure');
+    photosContainer.innerHTML = '';
+
     var photosTemplate = document.getElementById('picture-template');
     var photosFragment = document.createDocumentFragment();
 
@@ -102,14 +105,13 @@
   }
 
   function initFilters() {
-    var filterElements = document.querySelectorAll('.filters');
+    var filterElements = document.querySelectorAll('.filters-radio');
     for (var i = 0, l = filterElements.length; i < l; i++) {
       filterElements[i].onclick = function(evt) {
         var clickedFilter = evt.currentTarget;
         setActiveFilter(clickedFilter.value);
 
-        document.querySelector('.hotel-filter-selected').classList.remove('hotel-filter-selected');
-        clickedFilter.classList.add('hotel-filter-selected');
+        clickedFilter.checked = true;
       }
     }
   }
@@ -120,11 +122,11 @@
       case 'discussed':
         filteredPhotos = filteredPhotos.sort(function(a, b) {
           if (a.comments > b.comments || (b.comments && a.comments === 0)) {
-            return 1;
+            return -1;
           }
 
           if (a.comments < b.comments || (a.comments && b.comments === 0)) {
-            return -1;
+            return 1;
           }
 
           if (a.comments === b.comments) {
