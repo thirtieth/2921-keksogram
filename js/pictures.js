@@ -84,7 +84,7 @@
 
         case ReadyState.DONE:
         default:
-          if (loadedXhr.status == 200) {
+          if (loadedXhr.status === 200) {
             var data = loadedXhr.response;
             onComplete(JSON.parse(data));
           }
@@ -94,11 +94,11 @@
           }
           break;
       }
-    }
+    };
 
     xhr.ontimeout = function() {
       onError();
-    }
+    };
   }
 
   function loadPhotos(callback) {
@@ -112,7 +112,7 @@
       function() {
         photosContainer.classList.add('pictures-loading');
       }
-    )
+    );
   }
 
   function comparePhotosByDate(aPhoto, bPhoto) {
@@ -121,7 +121,12 @@
 
   function comparePhotosByPopularity(aPhoto, bPhoto) {
     return bPhoto.comments - aPhoto.comments;
-  };
+  }
+
+  function setActiveFilter(filterValue) {
+    var filteredPhotos = filterPhotos(photos, filterValue);
+    renderPhotos(filteredPhotos);
+  }
 
   function initFilters() {
     var filterElements = document.querySelectorAll('.filters-radio');
@@ -131,12 +136,12 @@
         setActiveFilter(clickedFilter.value);
 
         clickedFilter.checked = true;
-      }
+      };
     }
   }
 
-  function filterPhotos(photos, filterValue) {
-    var filteredPhotos = photos.slice(0);
+  function filterPhotos(images, filterValue) {
+    var filteredPhotos = images.slice(0);
     switch (filterValue) {
       case 'discussed':
         filteredPhotos = filteredPhotos.sort(comparePhotosByPopularity);
@@ -147,16 +152,11 @@
         break;
 
       default:
-        filteredPhotos = photos.slice(0);
+        filteredPhotos = images.slice(0);
         break;
     }
 
     return filteredPhotos;
-  }
-
-  function setActiveFilter(filterValue) {
-    var filteredPhotos = filterPhotos(photos, filterValue);
-    renderPhotos(filteredPhotos);
   }
 
   initFilters();

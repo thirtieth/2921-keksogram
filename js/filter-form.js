@@ -15,7 +15,7 @@
 
   var filterMap;
 
-  var restoreFiltersValue = function () {
+  var restoreFiltersValue = function() {
     if (docCookies.hasItem(filterNone.value)) {
       filterNone.checked = true;
     }
@@ -25,7 +25,7 @@
     if (docCookies.hasItem(filterSepia.value)) {
       filterSepia.checked = true;
     }
-  }
+  };
 
   restoreFiltersValue();
 
@@ -61,10 +61,10 @@
     uploadForm.classList.remove('invisible');
     filterForm.classList.add('invisible');
 
-    if(filterSepia.checked) {
+    if (filterSepia.checked) {
       docCookies.setItem(filterSepia.value);
     }
-    else if(filterChrome.checked) {
+    else if (filterChrome.checked) {
       docCookies.setItem(filterChrome.value);
     }
     else {
