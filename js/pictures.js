@@ -123,23 +123,6 @@
     return bPhoto.comments - aPhoto.comments;
   }
 
-  function setActiveFilter(filterValue) {
-    var filteredPhotos = filterPhotos(photos, filterValue);
-    renderPhotos(filteredPhotos);
-  }
-
-  function initFilters() {
-    var filterElements = document.querySelectorAll('.filters-radio');
-    for (var i = 0, l = filterElements.length; i < l; i++) {
-      filterElements[i].onclick = function(evt) {
-        var clickedFilter = evt.currentTarget;
-        setActiveFilter(clickedFilter.value);
-
-        clickedFilter.checked = true;
-      };
-    }
-  }
-
   function filterPhotos(images, filterValue) {
     var filteredPhotos = images.slice(0);
     switch (filterValue) {
@@ -157,6 +140,23 @@
     }
 
     return filteredPhotos;
+  }
+
+  function setActiveFilter(filterValue) {
+    var filteredPhotos = filterPhotos(photos, filterValue);
+    renderPhotos(filteredPhotos);
+  }
+
+  function initFilters() {
+    var filterElements = document.querySelectorAll('.filters-radio');
+    for (var i = 0, l = filterElements.length; i < l; i++) {
+      filterElements[i].onclick = function(evt) {
+        var clickedFilter = evt.currentTarget;
+        setActiveFilter(clickedFilter.value);
+
+        clickedFilter.checked = true;
+      };
+    }
   }
 
   initFilters();

@@ -28,8 +28,7 @@
 
     if (imageHeight < imageWidth) {
       sizeValue.max = imageHeight;
-    }
-    else {
+    } else {
         sizeValue.max = imageWidth;
     }
 

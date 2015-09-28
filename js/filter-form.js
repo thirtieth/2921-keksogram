@@ -63,11 +63,9 @@
 
     if (filterSepia.checked) {
       docCookies.setItem(filterSepia.value);
-    }
-    else if (filterChrome.checked) {
+    } else if (filterChrome.checked) {
       docCookies.setItem(filterChrome.value);
-    }
-    else {
+    } else {
       docCookies.setItem(filterNone.value);
     }
 
