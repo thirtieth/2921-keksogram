@@ -25,7 +25,7 @@
     if (docCookies.hasItem(filterSepia.value)) {
       filterSepia.checked = true;
     }
-  };
+  }
 
   restoreFiltersValue();
 
