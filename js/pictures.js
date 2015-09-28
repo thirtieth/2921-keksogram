@@ -1,7 +1,6 @@
 'use strict';
 
-(function () {
-
+(function() {
   var filters = document.querySelector('.filters');
 
   var photosContainer = document.querySelector('.pictures');
@@ -18,15 +17,14 @@
 
   filters.classList.add('hidden');
 
-  function renderPhotos(photos) {
-
+  function renderPhotos(photoItem) {
     photosContainer.classList.remove('pictures-failure');
     photosContainer.innerHTML = '';
 
     var photosTemplate = document.getElementById('picture-template');
     var photosFragment = document.createDocumentFragment();
 
-    photos.forEach(function(photo) {
+    photoItem.forEach(function(photo) {
 
       var newPhotoElement = photosTemplate.content.children[0].cloneNode(true);
 
@@ -54,7 +52,7 @@
           clearTimeout(imageLoadTimeout);
         };
 
-        photoImage.onerror = function(evt) {
+        photoImage.onerror = function() {
           newPhotoElement.classList.add('picture-load-failure');
           clearTimeout(imageLoadTimeout);
         };
@@ -62,6 +60,10 @@
     });
 
     photosContainer.appendChild(photosFragment);
+  }
+
+  function showLoadFailure() {
+    photosContainer.classList.add('pictures-failure');
   }
 
   function loadData(url, onComplete, onError, onProgress) {
@@ -92,7 +94,7 @@
           }
           break;
       }
-    };
+    }
 
     xhr.ontimeout = function() {
       onError();
@@ -102,19 +104,15 @@
   function loadPhotos(callback) {
     loadData(
       'data/pictures.json',
-      function (json) {
+      function(json) {
         photosContainer.classList.remove('pictures-loading');
         callback(json);
       },
       showLoadFailure,
-      function () {
+      function() {
         photosContainer.classList.add('pictures-loading');
       }
     )
-  }
-
-  function showLoadFailure() {
-    photosContainer.classList.add('pictures-failure');
   }
 
   function comparePhotosByDate(aPhoto, bPhoto) {
