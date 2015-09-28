@@ -64,10 +64,10 @@
     photosContainer.appendChild(photosFragment);
   }
 
-  function loadPhotos(callback) {
+  function loadData(url, onComplete, onError, onProgress) {
     var xhr = new XMLHttpRequest();
     xhr.timeout = REQUEST_FAILURE_TIMEOUT;
-    xhr.open('get', 'data/pictures.json');
+    xhr.open('get', url);
     xhr.send();
 
     xhr.onreadystatechange = function(evt) {
@@ -77,32 +77,53 @@
         case ReadyState.OPENED:
         case ReadyState.HEADERS_RECEIVED:
         case ReadyState.LOADING:
-          photosContainer.classList.add('pictures-loading');
+          onProgress();
           break;
 
         case ReadyState.DONE:
         default:
           if (loadedXhr.status == 200) {
             var data = loadedXhr.response;
-            photosContainer.classList.remove('pictures-loading');
-            callback(JSON.parse(data));
+            onComplete(JSON.parse(data));
           }
 
           if (loadedXhr.status > 400) {
-            showLoadFailure();
+            onError();
           }
           break;
       }
     };
 
     xhr.ontimeout = function() {
-      showLoadFailure();
+      onError();
     }
+  }
+
+  function loadPhotos(callback) {
+    loadData(
+      'data/pictures.json',
+      function (json) {
+        photosContainer.classList.remove('pictures-loading');
+        callback(json);
+      },
+      showLoadFailure,
+      function () {
+        photosContainer.classList.add('pictures-loading');
+      }
+    )
   }
 
   function showLoadFailure() {
     photosContainer.classList.add('pictures-failure');
   }
+
+  function comparePhotosByDate(aPhoto, bPhoto) {
+    return Date.parse(bPhoto.date) - Date.parse(aPhoto.date);
+  }
+
+  function comparePhotosByPopularity(aPhoto, bPhoto) {
+    return bPhoto.comments - aPhoto.comments;
+  };
 
   function initFilters() {
     var filterElements = document.querySelectorAll('.filters-radio');
@@ -120,37 +141,11 @@
     var filteredPhotos = photos.slice(0);
     switch (filterValue) {
       case 'discussed':
-        filteredPhotos = filteredPhotos.sort(function(a, b) {
-          if (a.comments > b.comments || (b.comments && a.comments === 0)) {
-            return -1;
-          }
-
-          if (a.comments < b.comments || (a.comments && b.comments === 0)) {
-            return 1;
-          }
-
-          if (a.comments === b.comments) {
-            return 0;
-          }
-        });
-
+        filteredPhotos = filteredPhotos.sort(comparePhotosByPopularity);
         break;
 
       case 'new':
-        filteredPhotos = filteredPhotos.sort(function(a, b) {
-          if (a.date > b.date) {
-            return -1;
-          }
-
-          if (a.date < b.date) {
-            return 1;
-          }
-
-          if (a.date === b.date) {
-            return 0;
-          }
-        });
-
+        filteredPhotos = filteredPhotos.sort(comparePhotosByDate);
         break;
 
       default:
@@ -166,12 +161,12 @@
     renderPhotos(filteredPhotos);
   }
 
-  filters.classList.remove('hidden');
-
   initFilters();
   loadPhotos(function(loadedPhotos) {
     photos = loadedPhotos;
     setActiveFilter('popular');
   });
+
+  filters.classList.remove('hidden');
 
 })();
