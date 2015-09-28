@@ -15,7 +15,7 @@
 
   var filterMap;
 
-  var restoreFiltersValue = function() {
+  function restoreFiltersValue() {
     if (docCookies.hasItem(filterNone.value)) {
       filterNone.checked = true;
     }
@@ -25,9 +25,7 @@
     if (docCookies.hasItem(filterSepia.value)) {
       filterSepia.checked = true;
     }
-  };
-
-  restoreFiltersValue();
+  }
 
   function setFilter() {
     if (!filterMap) {
@@ -40,6 +38,8 @@
 
     previewImage.className = 'filter-image-preview' + ' ' + filterMap[selectedFilter.value];
   }
+
+  restoreFiltersValue();
 
   for (var i = 0, l = selectedFilter.length; i < l; i++) {
     selectedFilter[i].onchange = function() {
