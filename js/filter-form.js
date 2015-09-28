@@ -1,4 +1,6 @@
-(function() {
+'use strict';
+
+(function () {
   var uploadForm = document.forms['upload-select-image'];
   var resizeForm = document.forms['upload-resize'];
   var filterForm = document.forms['upload-filter'];
@@ -13,14 +15,14 @@
 
   var filterMap;
 
-  var restoreFiltersValue = function() {
-    if(docCookies.hasItem(filterNone.value)) {
+  var restoreFiltersValue = function () {
+    if (docCookies.hasItem(filterNone.value)) {
       filterNone.checked = true;
     }
-    if(docCookies.hasItem(filterChrome.value)) {
+    if (docCookies.hasItem(filterChrome.value)) {
       filterChrome.checked = true;
     }
-    if(docCookies.hasItem(filterSepia.value)) {
+    if (docCookies.hasItem(filterSepia.value)) {
       filterSepia.checked = true;
     }
   };
@@ -37,7 +39,7 @@
     }
 
     previewImage.className = 'filter-image-preview' + ' ' + filterMap[selectedFilter.value];
-  };
+  }
 
   for (var i = 0, l = selectedFilter.length; i < l; i++) {
     selectedFilter[i].onchange = function(evt) {
