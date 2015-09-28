@@ -29,7 +29,7 @@
     if (imageHeight < imageWidth) {
       sizeValue.max = imageHeight;
     } else {
-        sizeValue.max = imageWidth;
+      sizeValue.max = imageWidth;
     }
 
     if (offsetLeft.value >= imageWidth - sizeValue.value) {
