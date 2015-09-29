@@ -16,14 +16,19 @@
   var filterMap;
 
   function restoreFiltersValue() {
-    if (docCookies.hasItem(filterNone.value)) {
-      filterNone.checked = true;
-    }
-    if (docCookies.hasItem(filterChrome.value)) {
-      filterChrome.checked = true;
-    }
-    if (docCookies.hasItem(filterSepia.value)) {
-      filterSepia.checked = true;
+    if (docCookies.hasItem('filter')) {
+      switch(docCookies.getItem('filter')){
+        case 'chrome':
+          filterChrome.checked = true;
+          break;
+        case 'sepia':
+          filterSepia.checked = true;
+          break;
+        case 'none':
+        default:
+          filterNone.checked = true;
+          break;
+      }
     }
   }
 
@@ -62,11 +67,11 @@
     filterForm.classList.add('invisible');
 
     if (filterSepia.checked) {
-      docCookies.setItem(filterSepia.value);
+      docCookies.setItem('filter', filterSepia.value);
     } else if (filterChrome.checked) {
-      docCookies.setItem(filterChrome.value);
+      docCookies.setItem('filter', filterChrome.value);
     } else {
-      docCookies.setItem(filterNone.value);
+      docCookies.setItem('filter', filterNone.value);
     }
 
     filterForm.submit();
