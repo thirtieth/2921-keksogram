@@ -1,3 +1,5 @@
+'use strict';
+
 (function() {
   var uploadForm = document.forms['upload-select-image'];
   var resizeForm = document.forms['upload-resize'];
@@ -13,19 +15,22 @@
 
   var filterMap;
 
-  var restoreFiltersValue = function() {
-    if(docCookies.hasItem(filterNone.value)) {
-      filterNone.checked = true;
+  function restoreFiltersValue() {
+    if (docCookies.hasItem('filter')) {
+      switch (docCookies.getItem('filter')) {
+        case 'chrome':
+          filterChrome.checked = true;
+          break;
+        case 'sepia':
+          filterSepia.checked = true;
+          break;
+        case 'none':
+        default:
+          filterNone.checked = true;
+          break;
+      }
     }
-    if(docCookies.hasItem(filterChrome.value)) {
-      filterChrome.checked = true;
-    }
-    if(docCookies.hasItem(filterSepia.value)) {
-      filterSepia.checked = true;
-    }
-  };
-
-  restoreFiltersValue();
+  }
 
   function setFilter() {
     if (!filterMap) {
@@ -37,12 +42,14 @@
     }
 
     previewImage.className = 'filter-image-preview' + ' ' + filterMap[selectedFilter.value];
-  };
+  }
+
+  restoreFiltersValue();
 
   for (var i = 0, l = selectedFilter.length; i < l; i++) {
-    selectedFilter[i].onchange = function(evt) {
+    selectedFilter[i].onchange = function() {
       setFilter();
-    }
+    };
   }
 
   prevButton.onclick = function(evt) {
@@ -59,14 +66,12 @@
     uploadForm.classList.remove('invisible');
     filterForm.classList.add('invisible');
 
-    if(filterSepia.checked) {
-      docCookies.setItem(filterSepia.value);
-    }
-    else if(filterChrome.checked) {
-      docCookies.setItem(filterChrome.value);
-    }
-    else {
-      docCookies.setItem(filterNone.value);
+    if (filterSepia.checked) {
+      docCookies.setItem('filter', filterSepia.value);
+    } else if (filterChrome.checked) {
+      docCookies.setItem('filter', filterChrome.value);
+    } else {
+      docCookies.setItem('filter', filterNone.value);
     }
 
     filterForm.submit();
