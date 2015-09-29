@@ -17,7 +17,7 @@
 
   function restoreFiltersValue() {
     if (docCookies.hasItem('filter')) {
-      switch(docCookies.getItem('filter')){
+      switch (docCookies.getItem('filter')) {
         case 'chrome':
           filterChrome.checked = true;
           break;
