@@ -1,2 +1,4 @@
-Thumbs.db
-.idea/*
+gosha/
+node_modules/
+.idea
+.sublime*
