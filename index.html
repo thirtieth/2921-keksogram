@@ -8,7 +8,7 @@
 </head>
 <body>
 
-<form class="filters" action="index.html" method="get">
+<form class="filters" id="filters-set" action="index.html" method="get">
   <input type="radio" id="filter-popular" class="filters-radio" name="filter" value="popular" checked>
   <label for="filter-popular" class="filters-item">Популярные</label>
 
@@ -70,7 +70,7 @@
   </div>
 </div>
 
-<template class="picture-template">
+<template id="picture-template">
   <a href="" class="picture">
     <img src="" width="182" height="182">
     <span class="picture-stats">
@@ -85,6 +85,9 @@
 <script src="js/resize-form.js" charset="utf-8"></script>
 <script src="js/upload-form.js" charset="utf-8"></script>
 <script src="js/filter-form.js" charset="utf-8"></script>
+<script src="js/form-validation.js"></script>
+<script src="js/pictures.js"></script>
+<script src="js/gallery.js"></script>
 
 </body>
 </html>
