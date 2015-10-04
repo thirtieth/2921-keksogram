@@ -5,7 +5,15 @@
 
   var photosContainer = document.querySelector('.pictures');
   var REQUEST_FAILURE_TIMEOUT = 10000;
+  var PAGE_SIZE = 12;
   var photos;
+  var currentPage = 0;
+  var currentPhotos;
+
+  var filterForm = document.forms['filters-set'];
+  var filterPopular = filterForm['filter-popular'];
+  var filterNew = filterForm['filter-new'];
+  var filterDiscussed = filterForm['filter-discussed'];
 
   var ReadyState = {
     'UNSENT': 0,
@@ -17,15 +25,40 @@
 
   filters.classList.add('hidden');
 
-  function renderPhotos(photoItem) {
-    photosContainer.classList.remove('pictures-failure');
-    photosContainer.innerHTML = '';
+  function restoreFiltersCheckingMark() {
+    if (localStorage.getItem('filterName')) {
+      switch (localStorage.getItem('filterName')) {
+        case 'new':
+          filterNew.checked = true;
+          break;
+        case 'discussed':
+          filterDiscussed.checked = true;
+          break;
+        case 'popular':
+        default:
+          filterPopular.checked = true;
+          break;
+      }
+    }
+  }
+
+  function renderPhotos(photoItem, pageNumber, replace) {
+    replace = typeof replace !== 'undefined' ? replace : true;
+    pageNumber = pageNumber || 0;
+
+    if (replace) {
+      photosContainer.classList.remove('pictures-failure');
+      photosContainer.innerHTML = '';
+    }
 
     var photosTemplate = document.getElementById('picture-template');
     var photosFragment = document.createDocumentFragment();
+    var photosFrom = pageNumber * PAGE_SIZE;
+    var photosTo = photosFrom + PAGE_SIZE;
+
+    photoItem = photoItem.slice(photosFrom, photosTo);
 
     photoItem.forEach(function(photo) {
-
       var newPhotoElement = photosTemplate.content.children[0].cloneNode(true);
 
       newPhotoElement.querySelector('.picture-likes').textContent = photo['likes'];
@@ -138,33 +171,59 @@
         filteredPhotos = images.slice(0);
         break;
     }
-
+    localStorage.setItem('filterName', filterValue);
     return filteredPhotos;
   }
 
   function setActiveFilter(filterValue) {
-    var filteredPhotos = filterPhotos(photos, filterValue);
-    renderPhotos(filteredPhotos);
+    currentPhotos = filterPhotos(photos, filterValue);
+    currentPage = 0;
+    renderPhotos(currentPhotos, currentPage, true);
   }
 
   function initFilters() {
-    var filterElements = document.querySelectorAll('.filters-radio');
-    for (var i = 0, l = filterElements.length; i < l; i++) {
-      filterElements[i].onclick = function(evt) {
-        var clickedFilter = evt.currentTarget;
-        setActiveFilter(clickedFilter.value);
+    filters.addEventListener('click', function(evt) {
+      var clickedFilter = evt.target;
+      setActiveFilter(clickedFilter.value);
+      clickedFilter.checked = true;
+    });
+  }
 
-        clickedFilter.checked = true;
-      };
+  function isNextPageAvailable() {
+    return currentPage < Math.ceil(photos.length / PAGE_SIZE);
+  }
+
+  function isAtTheBottom() {
+    var GAP = 100;
+    return photosContainer.getBoundingClientRect().bottom - GAP <= window.innerHeight;
+  }
+
+  function checkNextPage() {
+    if (isAtTheBottom() && isNextPageAvailable()) {
+      window.dispatchEvent(new CustomEvent('loadneeded'));
     }
   }
 
+  function initScroll() {
+    var someTimeout;
+    window.addEventListener('scroll', function() {
+      clearTimeout(someTimeout);
+      someTimeout = setTimeout(checkNextPage, 100);
+    });
+
+    window.addEventListener('loadneeded', function() {
+      renderPhotos(currentPhotos, currentPage++, false);
+    });
+  }
+
   initFilters();
+  initScroll();
   loadPhotos(function(loadedPhotos) {
     photos = loadedPhotos;
-    setActiveFilter('popular');
+    setActiveFilter(localStorage.getItem('filterName') || 'popular');
   });
 
   filters.classList.remove('hidden');
+  restoreFiltersCheckingMark();
 
 })();
