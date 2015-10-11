@@ -6,7 +6,7 @@
 
   var Photo = function(data) {
     this._data = data;
-    this._onClick.bind(this);
+    this._onClick = this._onClick.bind(this);
   };
 
   Photo.prototype.render = function(container) {
