@@ -22,7 +22,7 @@
       photoImage.src = this._data['url'];
 
       var imageLoadTimeout = setTimeout(function() {
-          newPhotoElement.classList.add('picture-load-failure');
+        newPhotoElement.classList.add('picture-load-failure');
       }, REQUEST_FAILURE_TIMEOUT);
 
       photoImage.onload = function() {
