@@ -1,3 +1,5 @@
+/* global Photo: true */
+
 'use strict';
 
 (function() {
@@ -14,6 +16,8 @@
   var filterPopular = filterForm['filter-popular'];
   var filterNew = filterForm['filter-new'];
   var filterDiscussed = filterForm['filter-discussed'];
+
+  var renderedPhotos = [];
 
   var ReadyState = {
     'UNSENT': 0,
@@ -47,49 +51,24 @@
     pageNumber = pageNumber || 0;
 
     if (replace) {
+      var element;
+      while ((element = renderedPhotos.shift())) {
+        element.unrender();
+      }
       photosContainer.classList.remove('pictures-failure');
-      photosContainer.innerHTML = '';
     }
 
-    var photosTemplate = document.getElementById('picture-template');
     var photosFragment = document.createDocumentFragment();
+
     var photosFrom = pageNumber * PAGE_SIZE;
     var photosTo = photosFrom + PAGE_SIZE;
 
     photoItem = photoItem.slice(photosFrom, photosTo);
 
     photoItem.forEach(function(photo) {
-      var newPhotoElement = photosTemplate.content.children[0].cloneNode(true);
-
-      newPhotoElement.querySelector('.picture-likes').textContent = photo['likes'];
-      newPhotoElement.querySelector('.picture-comments').textContent = photo['comments'];
-
-      photosFragment.appendChild(newPhotoElement);
-
-      if (photo['url']) {
-        var photoImage = new Image();
-        photoImage.src = photo['url'];
-
-        var imageLoadTimeout = setTimeout(function() {
-          newPhotoElement.classList.add('picture-load-failure');
-        }, REQUEST_FAILURE_TIMEOUT);
-
-        photoImage.onload = function() {
-          photoImage.style.width = '182px';
-          photoImage.style.height = '182px';
-
-          var oldPhoto = newPhotoElement.querySelector('.picture img');
-
-          newPhotoElement.replaceChild(photoImage, oldPhoto);
-
-          clearTimeout(imageLoadTimeout);
-        };
-
-        photoImage.onerror = function() {
-          newPhotoElement.classList.add('picture-load-failure');
-          clearTimeout(imageLoadTimeout);
-        };
-      }
+      var newPhotoElement = new Photo(photo);
+      newPhotoElement.render(photosFragment);
+      renderedPhotos.push(newPhotoElement);
     });
 
     photosContainer.appendChild(photosFragment);
