@@ -131,19 +131,27 @@
     return Date.parse(bPhoto.date) - Date.parse(aPhoto.date);
   }
 
-  function comparePhotosByPopularity(aPhoto, bPhoto) {
+  function comparePhotosByDiscuss(aPhoto, bPhoto) {
     return bPhoto.comments - aPhoto.comments;
+  }
+
+  function comparePhotosByPopularity(aPhoto, bPhoto) {
+    return bPhoto.likes - aPhoto.likes;
   }
 
   function filterPhotos(images, filterValue) {
     var filteredPhotos = images.slice(0);
     switch (filterValue) {
       case 'discussed':
-        filteredPhotos = filteredPhotos.sort(comparePhotosByPopularity);
+        filteredPhotos = filteredPhotos.sort(comparePhotosByDiscuss);
         break;
 
       case 'new':
         filteredPhotos = filteredPhotos.sort(comparePhotosByDate);
+        break;
+
+      case 'popular':
+        filteredPhotos = filteredPhotos.sort(comparePhotosByPopularity);
         break;
 
       default:
@@ -157,7 +165,8 @@
   function setActiveFilter(filterValue) {
     currentPhotos = filterPhotos(photos, filterValue);
     currentPage = 0;
-    renderPhotos(currentPhotos, currentPage, true);
+    renderPhotos(currentPhotos, currentPage++, true);
+    lotSpace();
   }
 
   function initFilters() {
@@ -195,11 +204,18 @@
     });
   }
 
+  function lotSpace() {
+    if (photosContainer.getBoundingClientRect().bottom < window.innerHeight) {
+      renderPhotos(currentPhotos, currentPage++, false);
+    }
+  }
+
   initFilters();
   initScroll();
   loadPhotos(function(loadedPhotos) {
     photos = loadedPhotos;
     setActiveFilter(localStorage.getItem('filterName') || 'popular');
+    lotSpace();
   });
 
   filters.classList.remove('hidden');
