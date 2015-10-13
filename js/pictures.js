@@ -1,3 +1,5 @@
+/* global Photo: true Gallery: true */
+
 'use strict';
 
 (function() {
@@ -9,11 +11,15 @@
   var photos;
   var currentPage = 0;
   var currentPhotos;
+  var gallery;
+  var photoUrl;
 
   var filterForm = document.forms['filters-set'];
   var filterPopular = filterForm['filter-popular'];
   var filterNew = filterForm['filter-new'];
   var filterDiscussed = filterForm['filter-discussed'];
+
+  var renderedPhotos = [];
 
   var ReadyState = {
     'UNSENT': 0,
@@ -47,49 +53,24 @@
     pageNumber = pageNumber || 0;
 
     if (replace) {
+      var element;
+      while ((element = renderedPhotos.shift())) {
+        element.dispose();
+      }
       photosContainer.classList.remove('pictures-failure');
-      photosContainer.innerHTML = '';
     }
 
-    var photosTemplate = document.getElementById('picture-template');
     var photosFragment = document.createDocumentFragment();
+
     var photosFrom = pageNumber * PAGE_SIZE;
     var photosTo = photosFrom + PAGE_SIZE;
 
     photoItem = photoItem.slice(photosFrom, photosTo);
 
     photoItem.forEach(function(photo) {
-      var newPhotoElement = photosTemplate.content.children[0].cloneNode(true);
-
-      newPhotoElement.querySelector('.picture-likes').textContent = photo['likes'];
-      newPhotoElement.querySelector('.picture-comments').textContent = photo['comments'];
-
-      photosFragment.appendChild(newPhotoElement);
-
-      if (photo['url']) {
-        var photoImage = new Image();
-        photoImage.src = photo['url'];
-
-        var imageLoadTimeout = setTimeout(function() {
-          newPhotoElement.classList.add('picture-load-failure');
-        }, REQUEST_FAILURE_TIMEOUT);
-
-        photoImage.onload = function() {
-          photoImage.style.width = '182px';
-          photoImage.style.height = '182px';
-
-          var oldPhoto = newPhotoElement.querySelector('.picture img');
-
-          newPhotoElement.replaceChild(photoImage, oldPhoto);
-
-          clearTimeout(imageLoadTimeout);
-        };
-
-        photoImage.onerror = function() {
-          newPhotoElement.classList.add('picture-load-failure');
-          clearTimeout(imageLoadTimeout);
-        };
-      }
+      var newPhotoObject = new Photo(photo);
+      newPhotoObject.render(photosFragment);
+      renderedPhotos.push(newPhotoObject);
     });
 
     photosContainer.appendChild(photosFragment);
@@ -152,19 +133,27 @@
     return Date.parse(bPhoto.date) - Date.parse(aPhoto.date);
   }
 
-  function comparePhotosByPopularity(aPhoto, bPhoto) {
+  function comparePhotosByDiscuss(aPhoto, bPhoto) {
     return bPhoto.comments - aPhoto.comments;
+  }
+
+  function comparePhotosByPopularity(aPhoto, bPhoto) {
+    return bPhoto.likes - aPhoto.likes;
   }
 
   function filterPhotos(images, filterValue) {
     var filteredPhotos = images.slice(0);
     switch (filterValue) {
       case 'discussed':
-        filteredPhotos = filteredPhotos.sort(comparePhotosByPopularity);
+        filteredPhotos = filteredPhotos.sort(comparePhotosByDiscuss);
         break;
 
       case 'new':
         filteredPhotos = filteredPhotos.sort(comparePhotosByDate);
+        break;
+
+      case 'popular':
+        filteredPhotos = filteredPhotos.sort(comparePhotosByPopularity);
         break;
 
       default:
@@ -177,8 +166,10 @@
 
   function setActiveFilter(filterValue) {
     currentPhotos = filterPhotos(photos, filterValue);
+    photoUrl = getUrlPhotos(currentPhotos);
     currentPage = 0;
-    renderPhotos(currentPhotos, currentPage, true);
+    renderPhotos(currentPhotos, currentPage++, true);
+    lotSpace();
   }
 
   function initFilters() {
@@ -216,11 +207,40 @@
     });
   }
 
+  function lotSpace() {
+    if (photosContainer.getBoundingClientRect().bottom < window.innerHeight) {
+      renderPhotos(currentPhotos, currentPage++, false);
+    }
+  }
+
+  function getUrlPhotos(photoObj) {
+    return photoObj.map(function(pht) {
+      return pht.url;
+    });
+  }
+
+  function initGallery() {
+    if (!gallery) {
+      gallery = new Gallery();
+
+      window.addEventListener('galleryclick', function(evt) {
+        gallery.setPhotos(photoUrl);
+        var index = gallery._photos.indexOf(evt.detail.photoElement._data.url);
+        gallery.setCurrentPhoto(index);
+        gallery._showCurrentPhoto();
+        gallery.show();
+      });
+    }
+  }
+
   initFilters();
   initScroll();
+  initGallery();
+
   loadPhotos(function(loadedPhotos) {
     photos = loadedPhotos;
     setActiveFilter(localStorage.getItem('filterName') || 'popular');
+    lotSpace();
   });
 
   filters.classList.remove('hidden');
