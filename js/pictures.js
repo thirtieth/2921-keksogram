@@ -1,4 +1,4 @@
-/* global Photo: true */
+/* global Photo: true Gallery: true */
 
 'use strict';
 
@@ -11,6 +11,8 @@
   var photos;
   var currentPage = 0;
   var currentPhotos;
+  var gallery;
+  var photoUrl;
 
   var filterForm = document.forms['filters-set'];
   var filterPopular = filterForm['filter-popular'];
@@ -164,6 +166,7 @@
 
   function setActiveFilter(filterValue) {
     currentPhotos = filterPhotos(photos, filterValue);
+    photoUrl = getUrlPhotos(currentPhotos);
     currentPage = 0;
     renderPhotos(currentPhotos, currentPage++, true);
     lotSpace();
@@ -210,8 +213,30 @@
     }
   }
 
+  function getUrlPhotos(photoObj) {
+    return photoObj.map(function(pht) {
+      return pht.url;
+    });
+  }
+
+  function initGallery() {
+    if (!gallery) {
+      gallery = new Gallery();
+
+      window.addEventListener('galleryclick', function(evt) {
+        console.log('click click');
+        gallery.setPhotos(photoUrl);
+        console.log(evt.detail.photoElement._data.url);
+        //gallery.setCurrentPhoto(evt.detail.photoElement._data.url);
+        //gallery.show();
+      })
+    }
+  }
+
   initFilters();
   initScroll();
+  initGallery();
+
   loadPhotos(function(loadedPhotos) {
     photos = loadedPhotos;
     setActiveFilter(localStorage.getItem('filterName') || 'popular');
