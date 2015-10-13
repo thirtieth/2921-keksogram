@@ -55,7 +55,7 @@
     if (replace) {
       var element;
       while ((element = renderedPhotos.shift())) {
-        element.unrender();
+        element.dispose();
       }
       photosContainer.classList.remove('pictures-failure');
     }
@@ -68,9 +68,9 @@
     photoItem = photoItem.slice(photosFrom, photosTo);
 
     photoItem.forEach(function(photo) {
-      var newPhotoElement = new Photo(photo);
-      newPhotoElement.render(photosFragment);
-      renderedPhotos.push(newPhotoElement);
+      var newPhotoObject = new Photo(photo);
+      newPhotoObject.render(photosFragment);
+      renderedPhotos.push(newPhotoObject);
     });
 
     photosContainer.appendChild(photosFragment);
@@ -227,6 +227,7 @@
         gallery.setPhotos(photoUrl);
         var index = gallery._photos.indexOf(evt.detail.photoElement._data.url);
         gallery.setCurrentPhoto(index);
+        gallery._showCurrentPhoto();
         gallery.show();
       });
     }

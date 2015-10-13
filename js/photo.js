@@ -46,7 +46,7 @@
     this._element.addEventListener('click', this._onClick);
   };
 
-  Photo.prototype.unrender = function() {
+  Photo.prototype.dispose = function() {
     this._element.parentNode.removeChild(this._element);
     this._element.removeEventListener('click', this._onClick);
     this._element = null;
@@ -55,7 +55,7 @@
   Photo.prototype._onClick = function(evt) {
     evt.preventDefault();
     if (!this._element.classList.contains('picture-load-failure')) {
-      var galleryClick = new CustomEvent('galleryclick', { detail: {photoElement: this}});
+      var galleryClick = new CustomEvent('galleryclick', {detail: {photoElement: this}});
       window.dispatchEvent(galleryClick);
     }
   };

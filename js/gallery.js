@@ -27,8 +27,8 @@
   };
 
   Gallery.prototype._showCurrentPhoto = function() {
-    var imageElement = this._photos[this._currentPhoto];
-    this._photoElement.src = imageElement;
+    var imageUrl = this._photos[this._currentPhoto];
+    this._photoElement.src = imageUrl;
   };
 
   Gallery.prototype.setCurrentPhoto = function(photoIndex) {
@@ -38,7 +38,6 @@
       return;
     }
     this._currentPhoto = photoIndex;
-    this._showCurrentPhoto();
   };
 
   Gallery.prototype.show = function() {
@@ -63,9 +62,11 @@
         break;
       case Key.LEFT:
         this.setCurrentPhoto(this._currentPhoto - 1);
+        this._showCurrentPhoto();
         break;
       case Key.RIGHT:
         this.setCurrentPhoto(this._currentPhoto + 1);
+        this._showCurrentPhoto();
         break;
       default: break;
     }
