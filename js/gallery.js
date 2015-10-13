@@ -7,10 +7,14 @@
     'RIGHT': 39
   };
 
+  function clamp(value, min, max) {
+    return Math.min(Math.max(value, min), max);
+  }
+
   var Gallery = function() {
     this._galleryElement = document.querySelector('.gallery-overlay');
     this._closeButton = this._galleryElement.querySelector('.gallery-overlay-close');
-    this._photoElement = this._galleryElement.querySelector('.gallery-overlay-image');
+    this._photoElement = this._galleryElement.querySelector('.gallery-overlay-preview img');
     this._photos = [];
     this._currentPhoto = 0;
 
@@ -23,16 +27,17 @@
   };
 
   Gallery.prototype._showCurrentPhoto = function() {
-    this._photoElement.innerHTML = '';
-    var imageElement = new Image();
-    imageElement.src = this._photos[this._currentPhoto];
-    imageElement.onload = function() {
-      this._photoElement.appendChild(imageElement);
-    }.bind(this);
+    var imageElement = this._photos[this._currentPhoto];
+    this._photoElement.src = imageElement;
   };
 
-  Gallery.prototype.setCurrentPhoto = function(index) {
-    this._currentPhoto = index;
+  Gallery.prototype.setCurrentPhoto = function(photoIndex) {
+    photoIndex = clamp(photoIndex, 0, this._photos.length - 1);
+
+    if (this._currentPhoto === photoIndex) {
+      return;
+    }
+    this._currentPhoto = photoIndex;
     this._showCurrentPhoto();
   };
 
@@ -53,12 +58,14 @@
 
   Gallery.prototype._onDocumentKeyDown = function(evt) {
     switch (evt.keyCode) {
-      case key.ESC:
+      case Key.ESC:
         this.hide();
         break;
       case Key.LEFT:
+        this.setCurrentPhoto(this._currentPhoto - 1);
         break;
       case Key.RIGHT:
+        this.setCurrentPhoto(this._currentPhoto + 1);
         break;
       default: break;
     }

@@ -43,7 +43,7 @@
     }
 
     this._element = newPhotoElement;
-    this._element.addEventListener('click', this._element);
+    this._element.addEventListener('click', this._onClick);
   };
 
   Photo.prototype.unrender = function() {
@@ -52,7 +52,8 @@
     this._element = null;
   };
 
-  Photo.prototype._onClick = function() {
+  Photo.prototype._onClick = function(evt) {
+    evt.preventDefault();
     if (!this._element.classList.contains('picture-load-failure')) {
       var galleryClick = new CustomEvent('galleryclick', { detail: {photoElement: this}});
       window.dispatchEvent(galleryClick);

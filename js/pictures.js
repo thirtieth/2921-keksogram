@@ -224,12 +224,11 @@
       gallery = new Gallery();
 
       window.addEventListener('galleryclick', function(evt) {
-        console.log('click click');
         gallery.setPhotos(photoUrl);
-        console.log(evt.detail.photoElement._data.url);
-        //gallery.setCurrentPhoto(evt.detail.photoElement._data.url);
-        //gallery.show();
-      })
+        var index = gallery._photos.indexOf(evt.detail.photoElement._data.url);
+        gallery.setCurrentPhoto(index);
+        gallery.show();
+      });
     }
   }
 
