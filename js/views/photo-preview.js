@@ -1,3 +1,5 @@
+/* global Backbone: true */
+
 'use strict';
 
 (function() {
