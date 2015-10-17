@@ -5,7 +5,7 @@
 (function() {
   var REQUEST_FAILURE_TIMEOUT = 10000;
   var photosTemplate = document.getElementById('picture-template');
-  var photoImage = new Image();
+
   var PhotoView = Backbone.View.extend({
     initialize: function() {
       this._onImageLoad = this._onImageLoad.bind(this);
@@ -17,9 +17,9 @@
       'click': '_onClick'
     },
 
-    tagName: 'img',
+    //tagName: '',
 
-    className: 'picture',
+    className: 'pictures',
 
     render: function() {
       this.el.appendChild(photosTemplate.content.children[0].cloneNode(true));
@@ -27,6 +27,7 @@
       this.el.querySelector('.picture-comments').textContent = this.model.get('comments');
 
       if (this.model.get('url')) {
+        var photoImage = new Image();
 
         photoImage.src = this.model.get('url');
 
@@ -49,15 +50,18 @@
     },
 
     _onImageLoad: function(evt) {
-      photoImage.style.width = '182px';
-      photoImage.style.height = '182px';
-
       var loadedPhoto = evt.path[0];
+
+      loadedPhoto.style.width = '182px';
+      loadedPhoto.style.height = '182px';
+
       this._cleanupPhotoListeners(loadedPhoto);
 
       var oldPhoto = this.el.querySelector('.picture img');
+      console.log(this.el);
+      this.el.replaceChild(loadedPhoto, oldPhoto);
 
-      this.el.replaceChild(photoImage, oldPhoto);
+      this.el.classList.remove('picture-load-failure');
       clearTimeout(this._imageLoadTimeout);
     },
 
