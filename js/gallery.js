@@ -1,4 +1,4 @@
-/* global GalleryPhoto: true */
+/* global GalleryPhoto: true Backbone: true */
 
 'use strict';
 
@@ -14,12 +14,11 @@
   }
 
   var Gallery = function() {
-    this._photos = new Backbone.Collection();
+    this._photosUrlCollection = new Backbone.Collection();
 
     this._galleryElement = document.querySelector('.gallery-overlay');
     this._closeButton = this._galleryElement.querySelector('.gallery-overlay-close');
     this._photoElement = this._galleryElement.querySelector('.gallery-overlay-preview img');
-    //this._photos = [];
     this._currentPhoto = 0;
 
     this._onCloseClick = this._onCloseClick.bind(this);
@@ -27,21 +26,22 @@
   };
 
   Gallery.prototype.setPhotos = function(photos) {
-    //this._photos = photos;
-    this._photos.reset(photos.map(function(photoSrc) {
-      return new Backbone.Model({
-        url: photoSrc
-      });
-    }));
+    this._photosUrlCollection.reset(photos);
   };
 
-  Gallery.prototype._showCurrentPhoto = function() {
-    var imageUrl = this._photos[this._currentPhoto];
-    this._photoElement.src = imageUrl;
+  Gallery.prototype.showCurrentPhoto = function() {
+    var galleryElement = new GalleryPhoto({
+      model: this._photosUrlCollection.at(this._currentPhoto)
+    });
+
+    galleryElement.render();
+
+    //var imageUrl = this._photos[this._currentPhoto];
+    //this._photoElement.src = imageUrl;
   };
 
   Gallery.prototype.setCurrentPhoto = function(photoIndex) {
-    photoIndex = clamp(photoIndex, 0, this._photos.length - 1);
+    photoIndex = clamp(photoIndex, 0, this._photosUrlCollection.length - 1);
 
     if (this._currentPhoto === photoIndex) {
       return;
@@ -53,14 +53,13 @@
     this._galleryElement.classList.remove('invisible');
     this._closeButton.addEventListener('click', this._onCloseClick);
     document.body.addEventListener('keydown', this._onDocumentKeyDown);
-    this._showCurrentPhoto();
   };
 
   Gallery.prototype.hide = function() {
     this._galleryElement.classList.add('invisible');
     this._closeButton.removeEventListener('click', this._onCloseClick);
     document.body.removeEventListener('keydown', this._onDocumentKeyDown);
-    this._photos = [];
+    this._photosUrlCollection.reset();
     this._currentPhoto = 0;
   };
 
@@ -71,11 +70,11 @@
         break;
       case Key.LEFT:
         this.setCurrentPhoto(this._currentPhoto - 1);
-        this._showCurrentPhoto();
+        this.showCurrentPhoto();
         break;
       case Key.RIGHT:
         this.setCurrentPhoto(this._currentPhoto + 1);
-        this._showCurrentPhoto();
+        this.showCurrentPhoto();
         break;
       default: break;
     }

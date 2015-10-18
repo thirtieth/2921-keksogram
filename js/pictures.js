@@ -49,7 +49,7 @@
     }
   }
 
-  function renderPhotos(photoItem, pageNumber, replace) {
+  function renderPhotos(pageNumber, replace) {
     replace = typeof replace !== 'undefined' ? replace : true;
     pageNumber = pageNumber || 0;
 
@@ -80,9 +80,10 @@
       photosFragment.appendChild(view.el);
       renderedViews.push(view);
       view.on('galleryclick', function() {
-        console.log('click click');
-        gallery.setPhotos(view.model.get('url'));
-        gallery.setCurrentPhoto(0);
+        gallery.setPhotos(photoUrl);
+        var index = gallery._photosUrlCollection.indexOf(view.model.get('url'));
+        gallery.setCurrentPhoto(index);
+        gallery.showCurrentPhoto();
         gallery.show();
       });
     });
@@ -131,7 +132,7 @@
     currentPhotos = filterPhotos(filterValue);
     photoUrl = getUrlPhotos(currentPhotos);
     currentPage = 0;
-    renderPhotos(currentPhotos, currentPage++, true);
+    renderPhotos(currentPage++, true);
     lotSpace();
   }
 
@@ -166,13 +167,13 @@
     });
 
     window.addEventListener('loadneeded', function() {
-      renderPhotos(currentPhotos, currentPage++, false);
+      renderPhotos(currentPage++, false);
     });
   }
 
   function lotSpace() {
     if (photosContainer.getBoundingClientRect().bottom < window.innerHeight) {
-      renderPhotos(currentPhotos, currentPage++, false);
+      renderPhotos(currentPage++, false);
     }
   }
 
@@ -181,20 +182,6 @@
       return pht.url;
     });
   }
-
-//  function initGallery() {
-//    if (!gallery) {
-//      gallery = new Gallery();
-//
-//      window.addEventListener('galleryclick', function(evt) {
-//        gallery.setPhotos(photoUrl);
-//        var index = gallery._photos.indexOf(evt.detail.photoElement._data.url);
-//        gallery.setCurrentPhoto(index);
-//        gallery._showCurrentPhoto();
-//        gallery.show();
-//      });
-//    }
-//  }
 
   photosCollection.fetch({timeout: REQUEST_FAILURE_TIMEOUT}).success(function(loaded, state, jqXHR) {
     initiallyLoaded = jqXHR.responseJSON;

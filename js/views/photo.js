@@ -18,7 +18,6 @@
     },
 
     render: function() {
-      this.el = (photosTemplate.content.children[0].cloneNode(true));
       this.el.querySelector('.picture-likes').textContent = this.model.get('likes');
       this.el.querySelector('.picture-comments').textContent = this.model.get('comments');
 
