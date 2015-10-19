@@ -42,7 +42,6 @@
     this._galleryElement.classList.add('invisible');
     this._closeButton.removeEventListener('click', this._onCloseClick);
     document.body.removeEventListener('keydown', this._onDocumentKeyDown);
-    this._photosCollection.reset();
   };
 
   Gallery.prototype._onDocumentKeyDown = function(evt) {

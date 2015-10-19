@@ -18,7 +18,6 @@
   var initiallyLoaded = [];
   var renderedViews = [];
 
-  var currentPhotos;
   var gallery = new Gallery();
 
   var filterForm = document.forms['filters-set'];
@@ -123,7 +122,7 @@
   }
 
   function setActiveFilter(filterValue) {
-    currentPhotos = filterPhotos(filterValue);
+    var currentPhotos = filterPhotos(filterValue);
     currentPage = 0;
     renderPhotos(currentPage++, true);
     lotSpace();

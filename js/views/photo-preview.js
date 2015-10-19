@@ -12,8 +12,8 @@
       this._onClick = this._onClick.bind(this);
     },
 
-    render: function(photoElement) {
-      photoElement.src = this.model.get('url');
+    render: function(photoImg) {
+      photoImg.src = this.model.get('url');
     },
 
     _onClick: function(evt) {
