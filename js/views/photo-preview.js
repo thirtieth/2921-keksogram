@@ -3,8 +3,6 @@
 'use strict';
 
 (function() {
-  var photoElement = document.querySelector('.gallery-overlay-preview img');
-
   var GalleryView = Backbone.View.extend({
     events: {
       'click': '_onClick'
@@ -14,7 +12,7 @@
       this._onClick = this._onClick.bind(this);
     },
 
-    render: function() {
+    render: function(photoElement) {
       photoElement.src = this.model.get('url');
     },
 

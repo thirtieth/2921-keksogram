@@ -11,10 +11,9 @@
 
   var Gallery = function() {
     this._photosCollection = new Backbone.Collection();
-
+    this._photoElement = document.querySelector('.gallery-overlay-preview img');
     this._galleryElement = document.querySelector('.gallery-overlay');
     this._closeButton = this._galleryElement.querySelector('.gallery-overlay-close');
-    this._currentPhoto;
 
     this._onCloseClick = this._onCloseClick.bind(this);
     this._onDocumentKeyDown = this._onDocumentKeyDown.bind(this);
@@ -30,7 +29,7 @@
     this._currentPhoto = photoModel;
     var galleryElement = new GalleryView({model: this._currentPhoto});
 
-    galleryElement.render();
+    galleryElement.render(this._photoElement);
   };
 
   Gallery.prototype.show = function() {

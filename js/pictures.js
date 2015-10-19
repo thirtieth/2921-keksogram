@@ -1,5 +1,4 @@
 /* global
-     Photo: true
      Gallery: true
      PhotosCollection: true
      PhotoView: true
@@ -19,11 +18,8 @@
   var initiallyLoaded = [];
   var renderedViews = [];
 
-
-  var photos;
   var currentPhotos;
   var gallery = new Gallery();
-  var photoUrl;
 
   var filterForm = document.forms['filters-set'];
   var filterPopular = filterForm['filter-popular'];
@@ -128,7 +124,6 @@
 
   function setActiveFilter(filterValue) {
     currentPhotos = filterPhotos(filterValue);
-    photoUrl = getUrlPhotos(currentPhotos);
     currentPage = 0;
     renderPhotos(currentPage++, true);
     lotSpace();
@@ -173,12 +168,6 @@
     if (photosContainer.getBoundingClientRect().bottom < window.innerHeight) {
       renderPhotos(currentPage++, false);
     }
-  }
-
-  function getUrlPhotos(photoObj) {
-    return photoObj.map(function(pht) {
-      return pht.url;
-    });
   }
 
   photosCollection.fetch({timeout: REQUEST_FAILURE_TIMEOUT}).success(function(loaded, state, jqXHR) {

@@ -4,7 +4,6 @@
 
 (function() {
   var REQUEST_FAILURE_TIMEOUT = 10000;
-  var photosTemplate = document.getElementById('picture-template');
 
   var PhotoView = Backbone.View.extend({
     events: {
