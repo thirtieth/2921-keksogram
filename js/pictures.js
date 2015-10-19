@@ -122,7 +122,7 @@
   }
 
   function setActiveFilter(filterValue) {
-    var currentPhotos = filterPhotos(filterValue);
+    filterPhotos(filterValue);
     currentPage = 0;
     renderPhotos(currentPage++, true);
     lotSpace();
