@@ -81,9 +81,7 @@
       renderedViews.push(view);
       view.on('galleryclick', function() {
         gallery.setPhotos(photosCollection);
-        var index = gallery._photosCollection.indexOf(view.model.get('url')); debugger;
-        gallery.setCurrentPhoto(index);
-        gallery.showCurrentPhoto();
+        gallery.showPhoto(view.model);
         gallery.show();
       });
     });

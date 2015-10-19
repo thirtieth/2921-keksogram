@@ -3,41 +3,24 @@
 'use strict';
 
 (function() {
-  var GalleryView = Backbone.View.extend({
-    tagName: 'img',
+  var photoElement = document.querySelector('.gallery-overlay-preview img');
 
+  var GalleryView = Backbone.View.extend({
     events: {
-      'click': '_onLikeClick',
+      'click': '_onClick'
     },
 
     initialize: function() {
-      this._onModelLike = this._onModelLike.bind(this);
-      this.model.on('change:liked', this._onModelLike);
-    },
-
-   _onLikeClick: function(evt) {
-      if (evt.target.classList.contains('gallery-overlay-preview')) {
-        if (this.model.get('liked')) {
-          this.model.dislike();
-          console.log('dislike');
-        } else {
-          this.model.like();
-          console.log('like');
-        }
-      }
-    },
-
-    _onModelLike: function() {
-      this._updateLike();
-    },
-
-    _updateLike: function() {
-
+      this._onClick = this._onClick.bind(this);
     },
 
     render: function() {
-      console.log('render here');
+      photoElement.src = this.model.get('url');
+    },
 
+    _onClick: function(evt) {
+      evt.preventDefault();
+      console.log('like');
     }
 
   });

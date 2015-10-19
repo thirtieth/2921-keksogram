@@ -9,41 +9,28 @@
     'RIGHT': 39
   };
 
-  function clamp(value, min, max) {
-    return Math.min(Math.max(value, min), max);
-  }
-
   var Gallery = function() {
     this._photosCollection = new Backbone.Collection();
 
     this._galleryElement = document.querySelector('.gallery-overlay');
     this._closeButton = this._galleryElement.querySelector('.gallery-overlay-close');
-    this._photoElement = this._galleryElement.querySelector('.gallery-overlay-preview img');
-    this._currentPhoto = 0;
+    this._currentPhoto;
 
     this._onCloseClick = this._onCloseClick.bind(this);
     this._onDocumentKeyDown = this._onDocumentKeyDown.bind(this);
   };
 
   Gallery.prototype.setPhotos = function(photos) {
-    this._photosCollection.reset(photos);
+    this._photosCollection = photos;
   };
 
-  Gallery.prototype.showCurrentPhoto = function() {
-    var galleryElement = new GalleryView({
-      model: this._photosCollection.at(this._currentPhoto)
-    });
+  Gallery.prototype.showPhoto = function(photoModel) {
+    this._index = this._photosCollection.indexOf(photoModel);
+
+    this._currentPhoto = photoModel;
+    var galleryElement = new GalleryView({model: this._currentPhoto});
 
     galleryElement.render();
-  };
-
-  Gallery.prototype.setCurrentPhoto = function(photoIndex) {
-    photoIndex = clamp(photoIndex, 0, this._photosCollection.length - 1);
-
-    if (this._currentPhoto === photoIndex) {
-      return;
-    }
-    this._currentPhoto = photoIndex;
   };
 
   Gallery.prototype.show = function() {
@@ -57,7 +44,6 @@
     this._closeButton.removeEventListener('click', this._onCloseClick);
     document.body.removeEventListener('keydown', this._onDocumentKeyDown);
     this._photosCollection.reset();
-    this._currentPhoto = 0;
   };
 
   Gallery.prototype._onDocumentKeyDown = function(evt) {
@@ -66,12 +52,10 @@
         this.hide();
         break;
       case Key.LEFT:
-        this.setCurrentPhoto(this._currentPhoto - 1);
-        this.showCurrentPhoto();
+        this.showPhoto(this._photosCollection.at(this._index - 1));
         break;
       case Key.RIGHT:
-        this.setCurrentPhoto(this._currentPhoto + 1);
-        this.showCurrentPhoto();
+        this.showPhoto(this._photosCollection.at(this._index + 1));
         break;
       default: break;
     }
