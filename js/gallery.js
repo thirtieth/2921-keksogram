@@ -1,4 +1,4 @@
-/* global GalleryPhoto: true Backbone: true */
+/* global GalleryView: true Backbone: true */
 
 'use strict';
 
@@ -14,7 +14,7 @@
   }
 
   var Gallery = function() {
-    this._photosUrlCollection = new Backbone.Collection();
+    this._photosCollection = new Backbone.Collection();
 
     this._galleryElement = document.querySelector('.gallery-overlay');
     this._closeButton = this._galleryElement.querySelector('.gallery-overlay-close');
@@ -26,22 +26,19 @@
   };
 
   Gallery.prototype.setPhotos = function(photos) {
-    this._photosUrlCollection.reset(photos);
+    this._photosCollection.reset(photos);
   };
 
   Gallery.prototype.showCurrentPhoto = function() {
-    var galleryElement = new GalleryPhoto({
-      model: this._photosUrlCollection.at(this._currentPhoto)
+    var galleryElement = new GalleryView({
+      model: this._photosCollection.at(this._currentPhoto)
     });
 
     galleryElement.render();
-
-    //var imageUrl = this._photos[this._currentPhoto];
-    //this._photoElement.src = imageUrl;
   };
 
   Gallery.prototype.setCurrentPhoto = function(photoIndex) {
-    photoIndex = clamp(photoIndex, 0, this._photosUrlCollection.length - 1);
+    photoIndex = clamp(photoIndex, 0, this._photosCollection.length - 1);
 
     if (this._currentPhoto === photoIndex) {
       return;
@@ -59,7 +56,7 @@
     this._galleryElement.classList.add('invisible');
     this._closeButton.removeEventListener('click', this._onCloseClick);
     document.body.removeEventListener('keydown', this._onDocumentKeyDown);
-    this._photosUrlCollection.reset();
+    this._photosCollection.reset();
     this._currentPhoto = 0;
   };
 

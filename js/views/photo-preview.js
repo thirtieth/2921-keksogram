@@ -3,7 +3,7 @@
 'use strict';
 
 (function() {
-  var GalleryPhoto = Backbone.View.extend({
+  var GalleryView = Backbone.View.extend({
     tagName: 'img',
 
     events: {
@@ -36,10 +36,11 @@
     },
 
     render: function() {
-      this.el.src = this.model.get('');
+      console.log('render here');
+
     }
 
   });
 
-  window.GalleryPhoto = GalleryPhoto;
+  window.GalleryView = GalleryView;
 })();
