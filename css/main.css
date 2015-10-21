@@ -400,10 +400,14 @@ input[type=radio]:checked + .upload-filter-label {
   display: inline-block;
 }
 
-.gallery-overlay-image[src=""] {
+.gallery-overlay-image {
   border: dotted 1px #ddd;
   display: block;
   cursor: pointer;
   height: 640px;
   width: 640px;
+}
+
+.gallery-overlay-controls {
+  color: #000;
 }

@@ -1,77 +1,99 @@
+/* global GalleryView: true Backbone: true */
+
 'use strict';
 
 (function() {
+  /**
+   * Коды клавиш для обработки
+   * @enum {number}
+   */
   var Key = {
     'ESC': 27,
     'LEFT': 37,
     'RIGHT': 39
   };
 
-  function clamp(value, min, max) {
-    return Math.min(Math.max(value, min), max);
-  }
-
+  /**
+   * Конструктор объекта фотогалереи
+   * @constructor
+   */
   var Gallery = function() {
+    this._photosCollection = new Backbone.Collection();
+    this._photoElement = document.querySelector('.gallery-overlay-preview');
     this._galleryElement = document.querySelector('.gallery-overlay');
     this._closeButton = this._galleryElement.querySelector('.gallery-overlay-close');
-    this._photoElement = this._galleryElement.querySelector('.gallery-overlay-preview img');
-    this._photos = [];
-    this._currentPhoto = 0;
 
     this._onCloseClick = this._onCloseClick.bind(this);
     this._onDocumentKeyDown = this._onDocumentKeyDown.bind(this);
   };
 
+  /**
+   * Записывает список фотографий для галереи в коллекцию
+   * @param  {Collection} photos
+   */
   Gallery.prototype.setPhotos = function(photos) {
-    this._photos = photos;
+    this._photosCollection = photos;
   };
 
-  Gallery.prototype._showCurrentPhoto = function() {
-    var imageUrl = this._photos[this._currentPhoto];
-    this._photoElement.src = imageUrl;
+  /**
+   * Показывает фото в галерее
+   * @param  {Model} photoModel
+   */
+  Gallery.prototype.showPhoto = function(photoModel) {
+    this._index = this._photosCollection.indexOf(photoModel);
+
+    this._currentPhoto = photoModel;
+    var galleryElement = new GalleryView({
+      model: this._currentPhoto,
+      el: this._photoElement
+    });
+
+    galleryElement.render();
   };
 
-  Gallery.prototype.setCurrentPhoto = function(photoIndex) {
-    photoIndex = clamp(photoIndex, 0, this._photos.length - 1);
-
-    if (this._currentPhoto === photoIndex) {
-      return;
-    }
-    this._currentPhoto = photoIndex;
-  };
-
+  /**
+   * Показывает саму галерею и запускает обработчик события закрытия галереи
+   */
   Gallery.prototype.show = function() {
     this._galleryElement.classList.remove('invisible');
     this._closeButton.addEventListener('click', this._onCloseClick);
     document.body.addEventListener('keydown', this._onDocumentKeyDown);
-    this._showCurrentPhoto();
   };
 
+  /**
+   * Прячет галерею и убирает обработчик закрытия галереи
+   */
   Gallery.prototype.hide = function() {
     this._galleryElement.classList.add('invisible');
     this._closeButton.removeEventListener('click', this._onCloseClick);
     document.body.removeEventListener('keydown', this._onDocumentKeyDown);
-    this._photos = [];
-    this._currentPhoto = 0;
   };
 
+  /**
+   * Обработчик нажатия клавиш ESC, влево и вправо
+   * @param {Event} evt
+   * @private
+   */
   Gallery.prototype._onDocumentKeyDown = function(evt) {
     switch (evt.keyCode) {
       case Key.ESC:
         this.hide();
         break;
       case Key.LEFT:
-        this.setCurrentPhoto(this._currentPhoto - 1);
-        this._showCurrentPhoto();
+        this.showPhoto(this._photosCollection.at(this._index - 1));
         break;
       case Key.RIGHT:
-        this.setCurrentPhoto(this._currentPhoto + 1);
-        this._showCurrentPhoto();
+        this.showPhoto(this._photosCollection.at(this._index + 1));
         break;
       default: break;
     }
   };
 
+  /**
+   * Обработчик закрытия галереи
+   * @param  {Event} evt
+   * @private
+   */
   Gallery.prototype._onCloseClick = function(evt) {
     evt.preventDefault();
     this.hide();
