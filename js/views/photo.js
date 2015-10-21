@@ -3,8 +3,16 @@
 'use strict';
 
 (function() {
+  /**
+   * @const
+   * @type {Number}
+   */
   var REQUEST_FAILURE_TIMEOUT = 10000;
 
+  /**
+   * @constructor
+   * @extends {Backbone.View}
+   */
   var PhotoView = Backbone.View.extend({
     events: {
       'click': '_onClick'
@@ -16,6 +24,10 @@
       this._onClick = this._onClick.bind(this);
     },
 
+    /**
+     * Отрисовка фотографии
+     *
+     */
     render: function() {
       this.el.querySelector('.picture-likes').textContent = this.model.get('likes');
       this.el.querySelector('.picture-comments').textContent = this.model.get('comments');
@@ -35,6 +47,11 @@
       }
     },
 
+    /**
+     * Обработчик клика по фотографии
+     * @param  {MouseEvent} evt
+     * @private
+     */
     _onClick: function(evt) {
       evt.preventDefault();
       var clickedElement = evt.target;
@@ -44,6 +61,10 @@
       }
     },
 
+    /**
+     * @param {Event} evt
+     * @private
+     */
     _onImageLoad: function(evt) {
       var loadedPhoto = evt.path[0];
 
@@ -59,6 +80,10 @@
       clearTimeout(this._imageLoadTimeout);
     },
 
+    /**
+     * @param {Event} evt
+     * @private
+     */
     _onImageFail: function(evt) {
       var failedPhoto = evt.path[0];
       this._cleanupPhotoListeners(failedPhoto);
@@ -66,6 +91,10 @@
       clearTimeout(this._imageLoadTimeout);
     },
 
+    /**
+     * @param {Image} image
+     * @private
+     */
     _cleanupPhotoListeners: function(image) {
       image.removeEventListener('load', this._onImageLoad);
       image.removeEventListener('error', this._onImageError);

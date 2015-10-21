@@ -9,8 +9,22 @@
 (function() {
   var filters = document.querySelector('.filters');
 
+  /**
+   * Контейнер для фотографий
+   * @type {Element}
+   */
   var photosContainer = document.querySelector('.pictures');
+
+  /**
+   * @const
+   * @type {number}
+   */
   var REQUEST_FAILURE_TIMEOUT = 10000;
+
+  /**
+   * @const
+   * @type {number}
+   */
   var PAGE_SIZE = 12;
   var currentPage = 0;
 
@@ -18,6 +32,10 @@
   var initiallyLoaded = [];
   var renderedViews = [];
 
+  /**
+   * Объект типа фотогалерея
+   * @type {Gallery}
+   */
   var gallery = new Gallery();
 
   var filterForm = document.forms['filters-set'];
@@ -27,6 +45,9 @@
 
   filters.classList.add('hidden');
 
+  /**
+   * Устанавливает подсветку фильтра из localStorage
+   */
   function restoreFiltersCheckingMark() {
     if (localStorage.getItem('filterName')) {
       switch (localStorage.getItem('filterName')) {
@@ -44,6 +65,11 @@
     }
   }
 
+  /**
+   * Выводит фотографии постранично
+   * @param  {number} pageNumber
+   * @param  {boolean} replace
+   */
   function renderPhotos(pageNumber, replace) {
     replace = typeof replace !== 'undefined' ? replace : true;
     pageNumber = pageNumber || 0;
@@ -83,22 +109,39 @@
     photosContainer.appendChild(photosFragment);
   }
 
+  /**
+   * Добавляет класс ошибки, если ошибка загрузки фотографии
+   */
   function showLoadFailure() {
     photosContainer.classList.add('pictures-failure');
   }
 
+  /**
+   * Сравнение по дате фотографии
+   */
   function comparePhotosByDate(aPhoto, bPhoto) {
     return Date.parse(bPhoto.date) - Date.parse(aPhoto.date);
   }
 
+  /**
+   * Сравнение по количеству коментариев
+   */
   function comparePhotosByDiscuss(aPhoto, bPhoto) {
     return bPhoto.comments - aPhoto.comments;
   }
 
+  /**
+   * Сравнение по количеству лайков
+   */
   function comparePhotosByPopularity(aPhoto, bPhoto) {
     return bPhoto.likes - aPhoto.likes;
   }
 
+  /**
+   * Фильтрация фотографий
+   * @param  {string} filterValue
+   * @return {Array}
+   */
   function filterPhotos(filterValue) {
     var filteredPhotos = initiallyLoaded.slice(0);
     switch (filterValue) {
@@ -121,6 +164,10 @@
     return filteredPhotos;
   }
 
+  /**
+   * Устанавливает фильтр фотографий
+   * @param {string} filterValue
+   */
   function setActiveFilter(filterValue) {
     filterPhotos(filterValue);
     currentPage = 0;
@@ -128,6 +175,9 @@
     lotSpace();
   }
 
+  /**
+   * Обработчик события клика по фильтру
+   */
   function initFilters() {
     filters.addEventListener('click', function(evt) {
       var clickedFilter = evt.target;
@@ -136,21 +186,38 @@
     });
   }
 
+  /**
+   * Проверка доступности следующей страницы для отрисовки
+   * @return {boolean}
+   */
   function isNextPageAvailable() {
     return currentPage < Math.ceil(photosCollection.length / PAGE_SIZE);
   }
 
+  /**
+   * Проверка нахождения внизу страницы.
+   * @return {boolean}
+   */
   function isAtTheBottom() {
     var GAP = 100;
     return photosContainer.getBoundingClientRect().bottom - GAP <= window.innerHeight;
   }
 
+  /**
+   * Испускает на объекте window событие loadneeded если скролл находится внизу
+   * страницы и существует возможность показать еще одну страницу.
+   */
   function checkNextPage() {
     if (isAtTheBottom() && isNextPageAvailable()) {
       window.dispatchEvent(new CustomEvent('loadneeded'));
     }
   }
 
+  /**
+   * Создает два обработчика событий: на прокручивание окна, который в оптимизированном
+   * режиме (раз в 100 миллисекунд скролла) проверяет можно ли отрисовать следующую страницу;
+   * и обработчик события loadneeded, который вызывает функцию отрисовки следующей страницы.
+   */
   function initScroll() {
     var someTimeout;
     window.addEventListener('scroll', function() {
@@ -163,6 +230,9 @@
     });
   }
 
+  /**
+   * Проверяет есть ли еще место до конца страницы и вызывает отрисовку страницы
+   */
   function lotSpace() {
     if (photosContainer.getBoundingClientRect().bottom < window.innerHeight) {
       renderPhotos(currentPage++, false);
