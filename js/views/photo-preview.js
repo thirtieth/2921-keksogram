@@ -30,10 +30,10 @@
      */
     toggleLike: function() {
       if (this.model.get('liked')) {
-          this.model.dislike();
-        } else {
-          this.model.like();
-        }
+        this.model.dislike();
+      } else {
+        this.model.like();
+      }
     },
     /**
      * Обработчик клика по фото в галерее
@@ -44,7 +44,7 @@
       evt.preventDefault();
       this.toggleLike();
       this.render();
-    },
+    }
 
   });
 
