@@ -19,9 +19,12 @@
 
   resizeForm.onsubmit = function(evt) {
     evt.preventDefault();
-    filterForm.elements['filter-image-src'] = previewImage.src;
+    var image = resizer.exportImage();
+    filterForm.elements['filter-image-src'] = image.src;
 
     resizeForm.classList.add('invisible');
     filterForm.classList.remove('invisible');
   };
+
+
 })();

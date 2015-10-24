@@ -47,6 +47,8 @@
     if (offsetTop.value < 0) {
       offsetTop.value = 0;
     }
+
+    resizer.setConstraint( resizer._resizeConstraint.x + offsetLeft.value, resizer._resizeConstraint.y + offsetTop.value, sizeValue.value);
   };
 
   offsetLeft.onchange = function() {
