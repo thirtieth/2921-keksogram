@@ -101,7 +101,7 @@
       //
       this._ctx.strokeStyle = '#FFE753';
       this._ctx.lineWidth = 6;
-      this._ctx.setLineDash ([15, 10]);
+      this._ctx.setLineDash([15, 10]);
       this._ctx.strokeRect(-this._resizeConstraint.side / 2, -this._resizeConstraint.side / 2, this._resizeConstraint.side, this._resizeConstraint.side);
 
       // Восстановление состояния канваса, которое было до вызова ctx.save

@@ -1,3 +1,5 @@
+/* global resizer: true */
+
 'use strict';
 
 (function() {
@@ -5,7 +7,7 @@
   var resizeForm = document.forms['upload-resize'];
   var filterForm = document.forms['upload-filter'];
 
-  var previewImage = resizeForm.querySelector('.resize-image-preview');
+  //var previewImage = resizeForm.querySelector('.resize-image-preview');
   var prevButton = resizeForm['resize-prev'];
 
   prevButton.onclick = function(evt) {

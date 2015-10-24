@@ -1,3 +1,5 @@
+/* global resizer: true Resizer: true */
+
 'use strict';
 
 (function() {
