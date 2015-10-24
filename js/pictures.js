@@ -36,6 +36,12 @@ define([
    * @type {number}
    */
   var PAGE_SIZE = 12;
+
+  /**
+   * @const
+   * @type {string}
+   */
+  var REG_EXP = /^#filters\/(\S+)$/;
   var currentPage = 0;
 
   var photosCollection = new PhotosCollection();
@@ -60,7 +66,7 @@ define([
    */
   function parseURL() {
     var stringFromHash = location.hash;
-    var filterName = stringFromHash.match(/^#filters\/(\S+)$/);
+    var filterName = stringFromHash.match(REG_EXP);
     if (filterName) {
       setActiveFilter(filterName[1] || 'popular');
     }
@@ -70,7 +76,7 @@ define([
    * Устанавливает подсветку фильтра
    */
   function restoreFiltersCheckingMark() {
-    var filterName = location.hash.match(/^#filters\/(\S+)$/) || 'popular';
+    var filterName = location.hash.match(REG_EXP) || 'popular';
     if (filterName[1]) {
       switch (filterName[1]) {
         case 'new':
