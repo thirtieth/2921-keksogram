@@ -2,7 +2,7 @@
 
 'use strict';
 
-(function() {
+define(function() {
   /**
    * @const
    * @type {Number}
@@ -103,6 +103,6 @@
 
   });
 
-  window.PhotoView = PhotoView;
+  return PhotoView;
 
-})();
+});

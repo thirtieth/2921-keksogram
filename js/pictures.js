@@ -1,12 +1,22 @@
-/* global
-     Gallery: true
-     PhotosCollection: true
-     PhotoView: true
-*/
-
 'use strict';
 
-(function() {
+requirejs.config({
+  baseUrl: 'js'
+});
+
+define ([
+  'gallery',
+  'models/photo',
+  'models/photos',
+  'views/photo',
+
+  'filter-form',
+  'form-validation',
+  'logo-background',
+  'resize-form',
+  'resize-picture',
+  'upload-form'
+], function(Gallery, PhotoModel, PhotosCollection, PhotoView) {
   var filters = document.querySelector('.filters');
 
   /**
@@ -60,7 +70,7 @@
    * Устанавливает подсветку фильтра
    */
   function restoreFiltersCheckingMark() {
-    var filterName = location.hash.match(/^#filters\/(\S+)$/);
+    var filterName = location.hash.match(/^#filters\/(\S+)$/) || 'popular';
     if (filterName[1]) {
       switch (filterName[1]) {
         case 'new':
@@ -268,4 +278,4 @@
   filters.classList.remove('hidden');
   restoreFiltersCheckingMark();
 
-})();
+});

@@ -1,8 +1,10 @@
-/* global GalleryView: true Backbone: true */
+/* global Backbone: true */
 
 'use strict';
 
-(function() {
+define([
+  'views/photo-preview'
+], function(GalleryView) {
   /**
    * Коды клавиш для обработки
    * @enum {number}
@@ -99,5 +101,5 @@
     this.hide();
   };
 
-  window.Gallery = Gallery;
-})();
+  return Gallery;
+});

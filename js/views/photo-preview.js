@@ -2,7 +2,9 @@
 
 'use strict';
 
-(function() {
+define([
+  'models/photo'
+], function(PhotoModel) {
   /**
    * @constructor
    * @extends {Backbone.View}
@@ -50,5 +52,5 @@
 
   });
 
-  window.GalleryView = GalleryView;
-})();
+  return GalleryView;
+});

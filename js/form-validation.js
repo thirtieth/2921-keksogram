@@ -1,8 +1,8 @@
-/* global resizer: true */
-
 'use strict';
 
-(function() {
+define([
+  'resize-picture'
+], function(Resizer) {
 
   var formElements = document.forms['upload-resize'];
   var offsetLeft = formElements['resize-x'];
@@ -61,4 +61,4 @@
     offsetTop.max = imageHeight - sizeValue.value;
   };
 
-})();
+});
