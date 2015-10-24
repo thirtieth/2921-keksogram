@@ -31,8 +31,10 @@
     toggleLike: function() {
       if (this.model.get('liked')) {
         this.model.dislike();
+        this.el.querySelector('.likes-count').classList.remove('likes-count-liked');
       } else {
         this.model.like();
+        this.el.querySelector('.likes-count').classList.add('likes-count-liked');
       }
     },
     /**
