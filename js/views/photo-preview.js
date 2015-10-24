@@ -4,7 +4,7 @@
 
 define([
   'models/photo'
-], function(PhotoModel) {
+], function() {
   /**
    * @constructor
    * @extends {Backbone.View}
