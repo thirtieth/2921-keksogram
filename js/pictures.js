@@ -46,11 +46,23 @@
   filters.classList.add('hidden');
 
   /**
-   * Устанавливает подсветку фильтра из localStorage
+   * Берет из хэша адресной строки значение фильтра и устанавливает его
+   */
+  function parseURL() {
+    var stringFromHash = location.hash;
+    var filterName = stringFromHash.match(/^#filters\/(\S+)$/);
+    if (filterName) {
+      setActiveFilter(filterName[1] || 'popular');
+    }
+  }
+
+  /**
+   * Устанавливает подсветку фильтра
    */
   function restoreFiltersCheckingMark() {
-    if (localStorage.getItem('filterName')) {
-      switch (localStorage.getItem('filterName')) {
+    var filterName = location.hash.match(/^#filters\/(\S+)$/);
+    if (filterName[1]) {
+      switch (filterName[1]) {
         case 'new':
           filterNew.checked = true;
           break;
@@ -160,7 +172,6 @@
 
     }
     photosCollection.reset(filteredPhotos);
-    localStorage.setItem('filterName', filterValue);
     return filteredPhotos;
   }
 
@@ -181,7 +192,7 @@
   function initFilters() {
     filters.addEventListener('click', function(evt) {
       var clickedFilter = evt.target;
-      setActiveFilter(clickedFilter.value);
+      location.hash = 'filters/' + clickedFilter.value;
       clickedFilter.checked = true;
     });
   }
@@ -242,9 +253,13 @@
   photosCollection.fetch({timeout: REQUEST_FAILURE_TIMEOUT}).success(function(loaded, state, jqXHR) {
     initiallyLoaded = jqXHR.responseJSON;
 
+    window.addEventListener('hashchange', function() {
+      parseURL();
+    });
+
     initFilters();
     initScroll();
-    setActiveFilter(localStorage.getItem('filterName') || 'popular');
+    parseURL();
     lotSpace();
   }).fail(function() {
     showLoadFailure();
