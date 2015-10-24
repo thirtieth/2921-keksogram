@@ -1,8 +1,8 @@
+/* global resizer: true */
+
 'use strict';
 
-define([
-  'resize-picture'
-], function(Resizer) {
+define(function() {
 
   var formElements = document.forms['upload-resize'];
   var offsetLeft = formElements['resize-x'];

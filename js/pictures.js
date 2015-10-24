@@ -4,7 +4,7 @@ requirejs.config({
   baseUrl: 'js'
 });
 
-define ([
+define([
   'gallery',
   'models/photo',
   'models/photos',
