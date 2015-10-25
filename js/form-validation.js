@@ -2,7 +2,9 @@
 
 'use strict';
 
-define(function() {
+define([
+  'resize-picture'
+], function() {
 
   var formElements = document.forms['upload-resize'];
   var offsetLeft = formElements['resize-x'];
