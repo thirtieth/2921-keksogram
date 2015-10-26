@@ -42,6 +42,7 @@ define(function() {
 
       // Отрисовка изначального состояния канваса.
       this.redraw();
+      window.dispatchEvent(new CustomEvent('imagecreated'));
     }.bind(this);
 
     // Фиксирование контекста обработчиков.
@@ -218,15 +219,15 @@ define(function() {
      */
     setConstraint: function(x, y, side) {
       if (typeof x !== 'undefined') {
-        this._resizeConstraint.x = x;
+        this._resizeConstraint.x = +x;
       }
 
       if (typeof y !== 'undefined') {
-        this._resizeConstraint.y = y;
+        this._resizeConstraint.y = +y;
       }
 
       if (typeof side !== 'undefined') {
-        this._resizeConstraint.side = side;
+        this._resizeConstraint.side = +side;
       }
 
       requestAnimationFrame(function() {

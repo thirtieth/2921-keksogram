@@ -1,7 +1,8 @@
 'use strict';
 
 requirejs.config({
-  baseUrl: 'js'
+  baseUrl: 'js',
+  urlArgs: "bust=" +  (new Date()).getTime()
 });
 
 define([
@@ -11,11 +12,10 @@ define([
   'views/photo',
 
   'filter-form',
-  'form-validation',
   'logo-background',
-  'resize-form',
+  'upload-form',
   'resize-picture',
-  'upload-form'
+  'resize-form'
 ], function(Gallery, PhotoModel, PhotosCollection, PhotoView) {
   var filters = document.querySelector('.filters');
 
@@ -70,6 +70,7 @@ define([
     if (filterName) {
       setActiveFilter(filterName[1] || 'popular');
     }
+    lotSpace();
   }
 
   /**
@@ -277,6 +278,7 @@ define([
     initScroll();
     parseURL();
     lotSpace();
+
   }).fail(function() {
     showLoadFailure();
   });

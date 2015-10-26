@@ -32,14 +32,19 @@ define([
 
     uploadImage(fileElement, function(image) {
       sessionStorage.setItem('uploaded-image', image);
-      resizeForm.querySelector('.resize-image-preview').src = image;
-      filterForm.querySelector('.filter-image-preview').src = image;
+      //resizeForm.querySelector('.resize-image-preview').src = image;
+      //filterForm.querySelector('.filter-image-preview').src = image;
+
+      if (typeof resizer !== 'undefined') {
+        resizer.remove();
+      }
 
       resizer = new Resizer(image);
       resizer.setElement(resizeForm);
 
       uploadForm.classList.add('invisible');
       resizeForm.classList.remove('invisible');
+
     });
   };
 
