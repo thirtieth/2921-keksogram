@@ -23,9 +23,9 @@ define([
     imageHeight = imageConstraint.side + imageConstraint.y * 2;
     imageWidth = imageConstraint.side + imageConstraint.x * 2;
 
-    offsetLeft.value = parseInt(imageConstraint.x);
-    offsetTop.value = parseInt(imageConstraint.y);
-    sizeValue.value = parseInt(imageConstraint.side);
+    offsetLeft.value = parseInt(imageConstraint.x, 10);
+    offsetTop.value = parseInt(imageConstraint.y, 10);
+    sizeValue.value = parseInt(imageConstraint.side, 10);
 
     offsetLeft.min = 0;
     offsetTop.min = 0;
@@ -33,10 +33,10 @@ define([
   });
 
   window.addEventListener('resizerchange', function() {
-    var x = parseInt(resizer.getConstraint().x);
-    var y = parseInt(resizer.getConstraint().y);
-    var maxValueX = x + parseInt(imageConstraint.side);
-    var maxValueY = y + parseInt(imageConstraint.side);
+    var x = parseInt(resizer.getConstraint().x, 10);
+    var y = parseInt(resizer.getConstraint().y, 10);
+    var maxValueX = x + parseInt(imageConstraint.side, 10);
+    var maxValueY = y + parseInt(imageConstraint.side, 10);
 
     if (x < 0) {
       offsetLeft.value = 0;
@@ -44,7 +44,7 @@ define([
     }
 
     if (maxValueX > imageWidth) {
-      offsetLeft.value = imageWidth - parseInt(imageConstraint.side);
+      offsetLeft.value = imageWidth - parseInt(imageConstraint.side, 10);
       resizer.setConstraint(offsetLeft.value, offsetTop.value, sizeValue.value);
     }
 
@@ -54,12 +54,12 @@ define([
     }
 
     if (maxValueY > imageHeight) {
-      offsetTop.value = imageHeight - parseInt(imageConstraint.side);
+      offsetTop.value = imageHeight - parseInt(imageConstraint.side, 10);
       resizer.setConstraint(offsetLeft.value, offsetTop.value, sizeValue.value);
     }
 
-    offsetLeft.value = parseInt(resizer.getConstraint().x);
-    offsetTop.value = parseInt(resizer.getConstraint().y);
+    offsetLeft.value = parseInt(resizer.getConstraint().x, 10);
+    offsetTop.value = parseInt(resizer.getConstraint().y, 10);
   });
 
   sizeValue.onchange = function() {
@@ -70,7 +70,7 @@ define([
     }
 
     if (offsetLeft.value >= imageWidth - sizeValue.value) {
-      offsetLeft.value = parseInt(imageWidth - sizeValue.value);
+      offsetLeft.value = parseInt(imageWidth - sizeValue.value, 10);
     }
 
     if (offsetLeft.value < 0) {
@@ -78,11 +78,15 @@ define([
     }
 
     if (offsetTop.value >= imageHeight - sizeValue.value) {
-      offsetTop.value = parseInt(imageHeight - sizeValue.value);
+      offsetTop.value = parseInt(imageHeight - sizeValue.value, 10);
     }
 
     if (offsetTop.value < 0) {
       offsetTop.value = 0;
+    }
+
+    if (sizeValue.value > sizeValue.max) {
+      sizeValue.value = sizeValue.max;
     }
 
     resizer.setConstraint(offsetLeft.value, offsetTop.value, sizeValue.value);
@@ -97,7 +101,6 @@ define([
     offsetTop.max = imageHeight - sizeValue.value;
     resizer.setConstraint(offsetLeft.value, offsetTop.value, sizeValue.value);
   };
-
 
   prevButton.onclick = function(evt) {
     evt.preventDefault();
