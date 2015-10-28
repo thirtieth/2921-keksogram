@@ -1,5 +1,3 @@
-/* global resizer: true */
-
 'use strict';
 
 define([
@@ -9,6 +7,7 @@ define([
   var resizeForm = document.forms['upload-resize'];
 
   var fileElement = uploadForm['upload-file'];
+  var resizer;
 
   function uploadImage(element, callback) {
     var fileReader = new FileReader();
@@ -37,6 +36,7 @@ define([
       }
 
       resizer = new Resizer(image);
+      Resizer.instance = resizer;
       resizer.setElement(resizeForm);
 
       uploadForm.classList.add('invisible');

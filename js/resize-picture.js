@@ -77,6 +77,11 @@ define(function() {
     _resizeConstraint: null,
 
     /**
+    * Глобальная ссылка на объект.
+    */
+    instance: null,
+
+    /**
      * Отрисовка канваса.
      */
     redraw: function() {
