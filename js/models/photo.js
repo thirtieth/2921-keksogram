@@ -16,14 +16,14 @@ define(function() {
       this.set({
         liked: true,
         likes: this.get('likes') + 1
-      })
+      });
     },
 
     dislike: function() {
       this.set({
         liked: false,
-        likes: this.get('likes')- 1
-      })
+        likes: this.get('likes') - 1
+      });
     }
   });
 
