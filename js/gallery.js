@@ -53,7 +53,7 @@ define([
         el: this._photoElement
       });
     } else {
-        galleryElement = new GalleryView({
+      galleryElement = new GalleryView({
         model: this._currentPhoto,
         el: this._photoElement
       });
