@@ -13,15 +13,17 @@ define(function() {
     },
 
     like: function() {
-      this.set('liked', true);
-      var likes = this.get('likes');
-      this.set('likes', ++likes);
+      this.set({
+        liked: true,
+        likes: this.get('likes') + 1
+      })
     },
 
     dislike: function() {
-      this.set('liked', false);
-      var likes = this.get('likes');
-      this.set('likes', --likes);
+      this.set({
+        liked: false,
+        likes: this.get('likes')- 1
+      })
     }
   });
 

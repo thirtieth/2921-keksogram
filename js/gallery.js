@@ -3,8 +3,9 @@
 'use strict';
 
 define([
-  'views/photo-preview'
-], function(GalleryView) {
+  'views/photo-preview',
+  'views/video-preview'
+], function(GalleryView, VideoView) {
   /**
    * Коды клавиш для обработки
    * @enum {number}
@@ -45,6 +46,7 @@ define([
     this._index = this._photosCollection.indexOf(photoModel);
 
     this._currentPhoto = photoModel;
+
     var galleryElement = new GalleryView({
       model: this._currentPhoto,
       el: this._photoElement

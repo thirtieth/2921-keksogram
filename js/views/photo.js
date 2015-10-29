@@ -35,7 +35,11 @@ define(function() {
       if (this.model.get('url')) {
         var photoImage = new Image();
 
-        photoImage.src = this.model.get('url');
+        if (this.model.get('preview')) {
+          photoImage.src = this.model.get('preview');
+        } else {
+          photoImage.src = this.model.get('url');
+        }
 
         this._imageLoadTimeout = setTimeout(function() {
           this.el.classList.add('picture-load-failure');

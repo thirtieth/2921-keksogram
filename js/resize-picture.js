@@ -204,6 +204,14 @@ define(function() {
       return this._resizeConstraint;
     },
 
+    getImageSize: function() {
+      var imageSize = {
+        width: this._image.naturalWidth,
+        height: this._image.naturalHeight
+      };
+      return imageSize;
+    },
+
     /**
      * Смещает кадрирование на значение указанное в параметрах.
      * @param {number} deltaX
