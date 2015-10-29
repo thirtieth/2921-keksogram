@@ -47,10 +47,19 @@ define([
 
     this._currentPhoto = photoModel;
 
-    var galleryElement = new GalleryView({
-      model: this._currentPhoto,
-      el: this._photoElement
-    });
+    if (this._currentPhoto.isVideo()) {
+      var galleryElement = new VideoView({
+        model: this._currentPhoto,
+        el: this._photoElement
+      });
+    } else {
+      var galleryElement = new GalleryView({
+        model: this._currentPhoto,
+        el: this._photoElement
+      });
+    }
+
+
 
     galleryElement.render();
   };

@@ -35,7 +35,7 @@ define(function() {
       if (this.model.get('url')) {
         var photoImage = new Image();
 
-        if (this.model.get('preview')) {
+        if (this.model.isVideo()) {
           photoImage.src = this.model.get('preview');
         } else {
           photoImage.src = this.model.get('url');

@@ -24,6 +24,10 @@ define(function() {
         liked: false,
         likes: this.get('likes') - 1
       });
+    },
+
+    isVideo: function() {
+      return typeof this.get('preview') !== 'undefined';
     }
   });
 
