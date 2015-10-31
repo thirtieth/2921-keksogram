@@ -132,7 +132,6 @@ define([
       view.on('galleryclick', function() {
         gallery.setPhotos(photosCollection);
         gallery.showPhoto(view.model);
-        gallery.show();
       });
     });
     photosContainer.appendChild(photosFragment);

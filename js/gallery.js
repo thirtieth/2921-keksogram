@@ -23,6 +23,7 @@ define([
   var Gallery = function() {
     this._photosCollection = new Backbone.Collection();
     this._photoElement = document.querySelector('.gallery-overlay-preview');
+    this._imgElement = this._photoElement.querySelector('img');
     this._galleryElement = document.querySelector('.gallery-overlay');
     this._closeButton = this._galleryElement.querySelector('.gallery-overlay-close');
 
@@ -44,10 +45,18 @@ define([
    */
   Gallery.prototype.showPhoto = function(photoModel) {
     this._index = this._photosCollection.indexOf(photoModel);
-
     this._currentPhoto = photoModel;
 
+    this._galleryElement.classList.remove('invisible');
+    this._closeButton.addEventListener('click', this._onCloseClick);
+    document.body.addEventListener('keydown', this._onDocumentKeyDown);
+
     if (this._currentPhoto.isVideo()) {
+      var videoElement = document.createElement('video');
+      this._photoElement.insertBefore(videoElement, this._photoElement.firstChild);
+      this._imgElement.classList.remove('gallery-overlay-image');
+      this._imgElement.src = '';
+
       var galleryElement = new VideoView({
         model: this._currentPhoto,
         el: this._photoElement
@@ -59,18 +68,7 @@ define([
       });
     }
 
-
-
     galleryElement.render();
-  };
-
-  /**
-   * Показывает саму галерею и запускает обработчик события закрытия галереи
-   */
-  Gallery.prototype.show = function() {
-    this._galleryElement.classList.remove('invisible');
-    this._closeButton.addEventListener('click', this._onCloseClick);
-    document.body.addEventListener('keydown', this._onDocumentKeyDown);
   };
 
   /**
@@ -80,6 +78,11 @@ define([
     this._galleryElement.classList.add('invisible');
     this._closeButton.removeEventListener('click', this._onCloseClick);
     document.body.removeEventListener('keydown', this._onDocumentKeyDown);
+    if (this._currentPhoto.isVideo()) {
+      var videoElement = this._photoElement.querySelector('video');
+      this._photoElement.removeChild(videoElement);
+      this._imgElement.classList.add('gallery-overlay-image');
+    }
   };
 
   /**
@@ -93,9 +96,11 @@ define([
         this.hide();
         break;
       case Key.LEFT:
+        this.hide();
         this.showPhoto(this._photosCollection.at(this._index - 1));
         break;
       case Key.RIGHT:
+        this.hide();
         this.showPhoto(this._photosCollection.at(this._index + 1));
         break;
       default: break;
